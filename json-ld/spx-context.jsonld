@@ -1,0 +1,46 @@
+{
+  "@context": {
+    "@version": 1.1,
+    "schema": "https://schema.org/",
+    "spx": "https://spxgraphics.com/vocab/",
+    "xsd": "http://www.w3.org/2001/XMLSchema#",
+
+    "RundownItem": "spx:RundownItem",
+    "Rundown": "spx:Rundown",
+    "Template": "spx:Template",
+    "TemplateField": "spx:TemplateField",
+    "Extension": "spx:Extension",
+    "Project": "spx:Project",
+
+    "id": "@id",
+    "name": "schema:name",
+    "description": "schema:description",
+    "template": {
+      "@id": "spx:template",
+      "@type": "@id"
+    },
+    "status": "spx:playbackStatus",
+    "fields": {
+      "@id": "spx:hasField",
+      "@container": "@list"
+    },
+    "field": "spx:fieldName",
+    "value": "schema:value",
+    "out": "spx:outputTarget",
+    "playDelay": {
+      "@id": "spx:playDelay",
+      "@type": "xsd:integer"
+    },
+    "notes": "schema:comment",
+    "project": "spx:project",
+    "rundown": "spx:rundown",
+    "command": "spx:playbackCommand",
+    "extension": "spx:extension",
+    "function": "spx:function",
+    "filename": "schema:name",
+    "files": {
+      "@id": "spx:hasFile",
+      "@container": "@set"
+    }
+  }
+}

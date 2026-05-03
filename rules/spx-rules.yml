@@ -1,0 +1,96 @@
+extends: spectral:oas
+rules:
+  # SPX Graphics API uses GET for most commands — operations must be named with verb-noun
+  spx-operation-id-verb-noun:
+    description: Operation IDs should follow verbNoun camelCase convention
+    message: 'Operation ID "{{value}}" should be verbNoun camelCase (e.g., playItem, loadRundown)'
+    severity: warn
+    given: $.paths[*][*].operationId
+    then:
+      function: pattern
+      functionOptions:
+        match: '^[a-z][a-zA-Z0-9]*$'
+
+  # All paths must be under /api/v1
+  spx-paths-versioned:
+    description: All SPX API paths must be under /api/v1
+    message: 'Path "{{path}}" must start with /api/v1'
+    severity: error
+    given: $.paths
+    then:
+      field: '@key'
+      function: pattern
+      functionOptions:
+        match: '^\/api\/v1\/'
+
+  # Operations should have summaries
+  spx-operation-summary-required:
+    description: All operations should have a summary
+    message: Operation is missing a summary
+    severity: warn
+    given: $.paths[*][*]
+    then:
+      field: summary
+      function: defined
+
+  # Operations should have tags
+  spx-operation-tags-required:
+    description: All operations should have at least one tag
+    message: Operation is missing tags
+    severity: warn
+    given: $.paths[*][*]
+    then:
+      field: tags
+      function: defined
+
+  # API key parameter should be named 'apikey'
+  spx-apikey-parameter-name:
+    description: The API key query parameter must be named 'apikey'
+    message: 'Query parameter for authentication should be named "apikey", found "{{value}}"'
+    severity: warn
+    given: $.paths[*][*].parameters[*]
+    then:
+      function: schema
+      functionOptions:
+        schema:
+          if:
+            properties:
+              in:
+                const: query
+              description:
+                pattern: API key
+          then:
+            properties:
+              name:
+                const: apikey
+
+  # Responses must include 200
+  spx-success-response-required:
+    description: Operations must define a 200 success response
+    message: Operation is missing a 200 response
+    severity: error
+    given: $.paths[*][*].responses
+    then:
+      field: '200'
+      function: defined
+
+  # Tags must use Title Case
+  spx-tags-title-case:
+    description: All tags must use Title Case
+    message: 'Tag "{{value}}" should use Title Case'
+    severity: warn
+    given: $.tags[*].name
+    then:
+      function: pattern
+      functionOptions:
+        match: '^[A-Z][a-zA-Z0-9]*(\s[A-Z][a-zA-Z0-9]*)*$'
+
+  # Request bodies for POST endpoints should define content type
+  spx-post-content-type:
+    description: POST operations must define a request body content type
+    message: POST operation is missing requestBody content definition
+    severity: warn
+    given: $.paths[*].post
+    then:
+      field: requestBody
+      function: defined

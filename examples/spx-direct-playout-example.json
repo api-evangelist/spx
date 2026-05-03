@@ -1,0 +1,26 @@
+{
+  "title": "Direct Template Playout",
+  "description": "Example of triggering direct playout of a lower-third template with field data",
+  "request": {
+    "method": "POST",
+    "url": "http://localhost:5656/api/v1/directplayout",
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "body": {
+      "command": "play",
+      "template": "templates/lowerthird.html",
+      "fields": [
+        { "field": "f0", "value": "Jane Doe" },
+        { "field": "f1", "value": "Senior Correspondent" }
+      ]
+    }
+  },
+  "response": {
+    "status": 200,
+    "body": {
+      "status": "ok",
+      "message": "Direct playout executed: play"
+    }
+  }
+}

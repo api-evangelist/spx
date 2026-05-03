@@ -1,0 +1,16 @@
+{
+  "title": "Load a Rundown",
+  "description": "Example of loading a rundown file using the SPX Graphics Control API",
+  "request": {
+    "method": "GET",
+    "url": "http://localhost:5656/api/v1/rundown/load?file=LiveShow/MainRundown",
+    "headers": {}
+  },
+  "response": {
+    "status": 200,
+    "body": {
+      "status": "ok",
+      "message": "Rundown loaded: LiveShow/MainRundown"
+    }
+  }
+}

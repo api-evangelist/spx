@@ -1,0 +1,72 @@
+{
+  "name": "SPX Rundown Item",
+  "description": "Structure documentation for an SPX-GC rundown item object",
+  "fields": [
+    {
+      "name": "id",
+      "type": "string",
+      "required": false,
+      "description": "Unique identifier for the rundown item"
+    },
+    {
+      "name": "name",
+      "type": "string",
+      "required": false,
+      "description": "Display name shown in the SPX-GC UI rundown list"
+    },
+    {
+      "name": "template",
+      "type": "string",
+      "required": true,
+      "description": "Path to the HTML template file relative to TEMPLATES folder"
+    },
+    {
+      "name": "status",
+      "type": "string",
+      "required": false,
+      "description": "Current playback state: idle, playing, or stopped",
+      "enum": ["idle", "playing", "stopped"]
+    },
+    {
+      "name": "fields",
+      "type": "array",
+      "required": false,
+      "description": "Array of field name/value pairs populating the template",
+      "items": {
+        "type": "object",
+        "fields": [
+          {
+            "name": "field",
+            "type": "string",
+            "required": true,
+            "description": "Template variable name (e.g., f0, title, subtitle)"
+          },
+          {
+            "name": "value",
+            "type": "string",
+            "required": true,
+            "description": "Value to render in the template variable"
+          }
+        ]
+      }
+    },
+    {
+      "name": "out",
+      "type": "string",
+      "required": false,
+      "description": "Render output target (CasparCG, OBS, vMix, etc.)"
+    },
+    {
+      "name": "playDelay",
+      "type": "integer",
+      "required": false,
+      "description": "Delay in milliseconds before automatic playback"
+    },
+    {
+      "name": "notes",
+      "type": "string",
+      "required": false,
+      "description": "Operator notes for production reference"
+    }
+  ]
+}

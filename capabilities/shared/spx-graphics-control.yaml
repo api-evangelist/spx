@@ -1,0 +1,377 @@
+naftiko: "1.0.0-alpha1"
+
+info:
+  label: "SPX Graphics Control API"
+  description: >-
+    SPX Graphics Controller REST API for controlling live video production graphics.
+    Provides rundown control, item playback, template management, file listing,
+    custom data persistence, and extension function invocation.
+  tags:
+    - Broadcast
+    - Graphics
+    - Live Production
+    - Media
+    - Streaming
+  created: "2026-05-02"
+  modified: "2026-05-02"
+
+binds:
+  - namespace: env
+    keys:
+      SPX_API_KEY: SPX_API_KEY
+
+capability:
+  consumes:
+    - type: http
+      namespace: spx-graphics
+      baseUri: http://localhost:5656
+      description: "SPX Graphics Controller local REST API"
+      authentication:
+        type: apikey
+        key: apikey
+        value: "{{SPX_API_KEY}}"
+        placement: query
+      resources:
+        - name: rundown
+          path: /api/v1/rundown
+          description: "Rundown loading and focus control"
+          operations:
+            - name: load-rundown
+              method: GET
+              description: "Load a rundown file from the given project"
+              inputParameters:
+                - name: file
+                  in: query
+                  type: string
+                  required: true
+                  description: "Project/Rundown path (e.g., MyProject/MyRundown)"
+              outputRawFormat: json
+              outputParameters:
+                - name: result
+                  type: object
+                  value: "$."
+            - name: focus-first-item
+              method: GET
+              description: "Move focus to the first item in the rundown"
+              outputRawFormat: json
+              outputParameters:
+                - name: result
+                  type: object
+                  value: "$."
+            - name: focus-next-item
+              method: GET
+              description: "Move focus to the next item in the rundown"
+              outputRawFormat: json
+              outputParameters:
+                - name: result
+                  type: object
+                  value: "$."
+            - name: focus-previous-item
+              method: GET
+              description: "Move focus to the previous item in the rundown"
+              outputRawFormat: json
+              outputParameters:
+                - name: result
+                  type: object
+                  value: "$."
+        - name: item
+          path: /api/v1/item
+          description: "Individual rundown item control"
+          operations:
+            - name: play-item
+              method: GET
+              description: "Issue play command to the focused item"
+              outputRawFormat: json
+              outputParameters:
+                - name: result
+                  type: object
+                  value: "$."
+            - name: stop-item
+              method: GET
+              description: "Issue stop command to the focused item"
+              outputRawFormat: json
+              outputParameters:
+                - name: result
+                  type: object
+                  value: "$."
+            - name: continue-item
+              method: GET
+              description: "Issue continue command to the focused item"
+              outputRawFormat: json
+              outputParameters:
+                - name: result
+                  type: object
+                  value: "$."
+            - name: update-item
+              method: POST
+              description: "Update data fields of a specific rundown item"
+              body:
+                type: json
+                data:
+                  project: "{{tools.project}}"
+                  rundown: "{{tools.rundown}}"
+                  item: "{{tools.item}}"
+                  fields: "{{tools.fields}}"
+              outputRawFormat: json
+              outputParameters:
+                - name: result
+                  type: object
+                  value: "$."
+        - name: direct-playout
+          path: /api/v1/directplayout
+          description: "Direct template playout without rundown context"
+          operations:
+            - name: direct-play-out
+              method: POST
+              description: "Execute play/continue/stop command directly to a template"
+              body:
+                type: json
+                data:
+                  command: "{{tools.command}}"
+                  template: "{{tools.template}}"
+                  fields: "{{tools.fields}}"
+              outputRawFormat: json
+              outputParameters:
+                - name: result
+                  type: object
+                  value: "$."
+        - name: files
+          path: /api/v1/getFileList
+          description: "File listing from ASSETS folder"
+          operations:
+            - name: get-file-list
+              method: GET
+              description: "List files in a given ASSETS subfolder"
+              inputParameters:
+                - name: folder
+                  in: query
+                  type: string
+                  required: true
+                  description: "Subfolder path relative to ASSETS"
+              outputRawFormat: json
+              outputParameters:
+                - name: files
+                  type: array
+                  value: "$.files"
+        - name: data
+          path: /api/v1/saveCustomJSON
+          description: "Custom JSON data persistence"
+          operations:
+            - name: save-custom-json
+              method: POST
+              description: "Save arbitrary JSON data to disk for persistence"
+              body:
+                type: json
+                data:
+                  filename: "{{tools.filename}}"
+                  data: "{{tools.data}}"
+              outputRawFormat: json
+              outputParameters:
+                - name: result
+                  type: object
+                  value: "$."
+        - name: extensions
+          path: /api/v1/invokeExtensionFunction
+          description: "SPX extension function invocation"
+          operations:
+            - name: invoke-extension-function
+              method: POST
+              description: "Invoke a function in a custom SPX extension"
+              body:
+                type: json
+                data:
+                  extension: "{{tools.extension}}"
+                  function: "{{tools.function}}"
+                  params: "{{tools.params}}"
+              outputRawFormat: json
+              outputParameters:
+                - name: result
+                  type: object
+                  value: "$."
+
+  exposes:
+    - type: rest
+      port: 8100
+      namespace: spx-graphics-rest
+      resources:
+        - path: /v1/rundown
+          name: rundown-control
+          description: "Rundown loading and focus control"
+          operations:
+            - method: GET
+              name: load-rundown
+              description: "Load a specific rundown file"
+              call: "spx-graphics.load-rundown"
+              with:
+                file: "rest.file"
+              outputParameters:
+                - type: object
+                  mapping: "$."
+        - path: /v1/items/play
+          name: item-play
+          description: "Play the focused rundown item"
+          operations:
+            - method: POST
+              name: play-item
+              description: "Issue play command to focused item"
+              call: "spx-graphics.play-item"
+              outputParameters:
+                - type: object
+                  mapping: "$."
+        - path: /v1/items/stop
+          name: item-stop
+          description: "Stop the focused rundown item"
+          operations:
+            - method: POST
+              name: stop-item
+              description: "Issue stop command to focused item"
+              call: "spx-graphics.stop-item"
+              outputParameters:
+                - type: object
+                  mapping: "$."
+        - path: /v1/items/continue
+          name: item-continue
+          description: "Continue the focused rundown item"
+          operations:
+            - method: POST
+              name: continue-item
+              description: "Issue continue command to focused item"
+              call: "spx-graphics.continue-item"
+              outputParameters:
+                - type: object
+                  mapping: "$."
+        - path: /v1/files
+          name: file-listing
+          description: "List files in ASSETS folder"
+          operations:
+            - method: GET
+              name: get-file-list
+              description: "Retrieve file list from ASSETS subfolder"
+              call: "spx-graphics.get-file-list"
+              with:
+                folder: "rest.folder"
+              outputParameters:
+                - type: object
+                  mapping: "$."
+
+    - type: mcp
+      port: 9100
+      namespace: spx-graphics-mcp
+      transport: http
+      tools:
+        - name: load-rundown
+          description: "Load a rundown file from the given project into SPX"
+          hints:
+            readOnly: false
+            idempotent: true
+          call: "spx-graphics.load-rundown"
+          with:
+            file: "tools.file"
+          outputParameters:
+            - type: object
+              mapping: "$."
+        - name: focus-first-item
+          description: "Move rundown focus to the first item"
+          hints:
+            readOnly: false
+            idempotent: true
+          call: "spx-graphics.focus-first-item"
+          outputParameters:
+            - type: object
+              mapping: "$."
+        - name: focus-next-item
+          description: "Advance rundown focus to the next item"
+          hints:
+            readOnly: false
+            idempotent: false
+          call: "spx-graphics.focus-next-item"
+          outputParameters:
+            - type: object
+              mapping: "$."
+        - name: focus-previous-item
+          description: "Move rundown focus to the previous item"
+          hints:
+            readOnly: false
+            idempotent: false
+          call: "spx-graphics.focus-previous-item"
+          outputParameters:
+            - type: object
+              mapping: "$."
+        - name: play-item
+          description: "Trigger playback of the currently focused rundown item"
+          hints:
+            readOnly: false
+            destructive: false
+          call: "spx-graphics.play-item"
+          outputParameters:
+            - type: object
+              mapping: "$."
+        - name: stop-item
+          description: "Stop playback of the currently focused rundown item"
+          hints:
+            readOnly: false
+            destructive: false
+          call: "spx-graphics.stop-item"
+          outputParameters:
+            - type: object
+              mapping: "$."
+        - name: continue-item
+          description: "Advance the currently focused item to its next animation state"
+          hints:
+            readOnly: false
+            destructive: false
+          call: "spx-graphics.continue-item"
+          outputParameters:
+            - type: object
+              mapping: "$."
+        - name: update-item
+          description: "Update template field values for a specific rundown item"
+          hints:
+            readOnly: false
+            idempotent: true
+          call: "spx-graphics.update-item"
+          with:
+            project: "tools.project"
+            rundown: "tools.rundown"
+            item: "tools.item"
+            fields: "tools.fields"
+          outputParameters:
+            - type: object
+              mapping: "$."
+        - name: direct-play-out
+          description: "Directly play, continue, or stop a template without a rundown"
+          hints:
+            readOnly: false
+            destructive: false
+          call: "spx-graphics.direct-play-out"
+          with:
+            command: "tools.command"
+            template: "tools.template"
+            fields: "tools.fields"
+          outputParameters:
+            - type: object
+              mapping: "$."
+        - name: get-file-list
+          description: "List available files in an ASSETS subfolder"
+          hints:
+            readOnly: true
+            idempotent: true
+          call: "spx-graphics.get-file-list"
+          with:
+            folder: "tools.folder"
+          outputParameters:
+            - type: object
+              mapping: "$."
+        - name: invoke-extension-function
+          description: "Invoke a function in a custom SPX extension"
+          hints:
+            readOnly: false
+            destructive: false
+          call: "spx-graphics.invoke-extension-function"
+          with:
+            extension: "tools.extension"
+            function: "tools.function"
+            params: "tools.params"
+          outputParameters:
+            - type: object
+              mapping: "$."

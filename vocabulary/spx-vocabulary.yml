@@ -1,0 +1,124 @@
+name: SPX Graphics Vocabulary
+description: >-
+  Domain vocabulary for the SPX Graphics Control system covering live video
+  production graphics, broadcast terminology, and API concepts.
+version: '1.0'
+created: '2026-05-02'
+modified: '2026-05-02'
+url: https://spxgraphics.com
+terms:
+  - term: Rundown
+    definition: >-
+      An ordered list of graphics items for a live production. Each rundown
+      belongs to a project and contains template-based items that can be
+      played, stopped, and continued in sequence.
+    tags:
+      - Core
+      - Production
+  - term: Rundown Item
+    definition: >-
+      A single entry in a rundown, representing one graphics template with
+      its associated field data and playback settings.
+    tags:
+      - Core
+      - Production
+  - term: Template
+    definition: >-
+      An HTML-based graphics template that defines the visual layout and
+      animation of a graphic overlay. Templates use JavaScript variables
+      (f0, f1, etc.) for data binding.
+    tags:
+      - Core
+      - Graphics
+  - term: CasparCG
+    definition: >-
+      Open-source broadcast graphics playout server that SPX-GC can control
+      for high-quality HTML-based graphics rendering in professional broadcast.
+    tags:
+      - Output Target
+      - Broadcast
+  - term: OBS
+    definition: >-
+      Open Broadcaster Software — a popular streaming and recording platform
+      that SPX-GC integrates with via the OBS WebSocket API for graphics overlay.
+    tags:
+      - Output Target
+      - Streaming
+  - term: vMix
+    definition: >-
+      Professional live video production software for Windows that supports
+      HTML graphics overlays, controllable by SPX-GC via the vMix API.
+    tags:
+      - Output Target
+      - Live Production
+  - term: Play Command
+    definition: >-
+      A playout instruction that makes a graphics item visible in the output,
+      triggering its in-animation. Issued via the /api/v1/item/play endpoint.
+    tags:
+      - Playback
+      - Command
+  - term: Stop Command
+    definition: >-
+      A playout instruction that removes a graphics item from the output,
+      triggering its out-animation. Issued via the /api/v1/item/stop endpoint.
+    tags:
+      - Playback
+      - Command
+  - term: Continue Command
+    definition: >-
+      A playout instruction that advances a graphics item to its next
+      animation state or page. Used for multi-step graphics animations.
+    tags:
+      - Playback
+      - Command
+  - term: Direct Playout
+    definition: >-
+      A method to play, stop, or continue a graphics template without it
+      being part of a rundown. Useful for ad-hoc graphics and automation.
+    tags:
+      - Playback
+      - Advanced
+  - term: Extension
+    definition: >-
+      A custom JavaScript module loaded by SPX-GC that exposes functions
+      callable via the API. Extensions power advanced features like sports
+      scoring, live timing, and custom data-driven graphics.
+    tags:
+      - Extension
+      - Advanced
+  - term: ASSETS Folder
+    definition: >-
+      The media file storage directory in SPX-GC containing images, videos,
+      audio, and other files available for use in graphics templates.
+    tags:
+      - Files
+      - Media
+  - term: API Key
+    definition: >-
+      An optional security token configured in SPX to restrict API access.
+      When set, must be passed as the 'apikey' query parameter on all requests.
+    tags:
+      - Security
+      - Authentication
+  - term: Stream Deck
+    definition: >-
+      Elgato hardware device with programmable buttons that can trigger SPX-GC
+      API commands for hands-on live production graphics control.
+    tags:
+      - Hardware
+      - Control Surface
+  - term: Lower Third
+    definition: >-
+      A common broadcast graphics element appearing in the lower portion of
+      the screen, typically showing a name and title over live video.
+    tags:
+      - Graphics Type
+      - Broadcast
+  - term: Port 5656
+    definition: >-
+      The default TCP port that the SPX-GC local web server and API listens on.
+      Configurable in the SPX configuration file.
+    tags:
+      - Infrastructure
+      - Configuration
