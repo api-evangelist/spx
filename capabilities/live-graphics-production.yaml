@@ -1,312 +1,457 @@
-naftiko: "1.0.0-alpha1"
-
+naftiko: 1.0.0-alpha2
 info:
-  label: "SPX Live Graphics Production"
-  description: >-
-    Unified capability for live video production graphics control using SPX-GC.
-    Enables broadcast operators, stream producers, and automation systems to control
-    graphics rundowns, trigger template playback, manage files, persist state for
-    sports scoring and timing, and invoke custom SPX extension logic — all through
-    a unified REST API and MCP server.
+  label: SPX Live Graphics Production
+  description: Unified capability for live video production graphics control using SPX-GC. Enables broadcast operators, stream
+    producers, and automation systems to control graphics rundowns, trigger template playback, manage files, persist state
+    for sports scoring and timing, and invoke custom SPX extension logic — all through a unified REST API and MCP server.
   tags:
-    - Broadcast
-    - Graphics
-    - Live Production
-    - Media
-    - Streaming
-    - Video Production
-  created: "2026-05-02"
-  modified: "2026-05-02"
-
+  - Broadcast
+  - Graphics
+  - Live Production
+  - Media
+  - Streaming
+  - Video Production
+  created: '2026-05-02'
+  modified: '2026-05-06'
 binds:
-  - namespace: env
-    keys:
-      SPX_API_KEY: SPX_API_KEY
-
+- namespace: env
+  keys:
+    SPX_API_KEY: SPX_API_KEY
 capability:
   consumes:
-    - import: spx-graphics
-      location: ./shared/spx-graphics-control.yaml
-
+  - type: http
+    namespace: spx-graphics
+    baseUri: http://localhost:5656
+    description: SPX Graphics Controller local REST API
+    authentication:
+      type: apikey
+      key: apikey
+      value: '{{SPX_API_KEY}}'
+      placement: query
+    resources:
+    - name: rundown
+      path: /api/v1/rundown
+      description: Rundown loading and focus control
+      operations:
+      - name: load-rundown
+        method: GET
+        description: Load a rundown file from the given project
+        inputParameters:
+        - name: file
+          in: query
+          type: string
+          required: true
+          description: Project/Rundown path (e.g., MyProject/MyRundown)
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+      - name: focus-first-item
+        method: GET
+        description: Move focus to the first item in the rundown
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+      - name: focus-next-item
+        method: GET
+        description: Move focus to the next item in the rundown
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+      - name: focus-previous-item
+        method: GET
+        description: Move focus to the previous item in the rundown
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+    - name: item
+      path: /api/v1/item
+      description: Individual rundown item control
+      operations:
+      - name: play-item
+        method: GET
+        description: Issue play command to the focused item
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+      - name: stop-item
+        method: GET
+        description: Issue stop command to the focused item
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+      - name: continue-item
+        method: GET
+        description: Issue continue command to the focused item
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+      - name: update-item
+        method: POST
+        description: Update data fields of a specific rundown item
+        body:
+          type: json
+          data:
+            project: '{{tools.project}}'
+            rundown: '{{tools.rundown}}'
+            item: '{{tools.item}}'
+            fields: '{{tools.fields}}'
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+    - name: direct-playout
+      path: /api/v1/directplayout
+      description: Direct template playout without rundown context
+      operations:
+      - name: direct-play-out
+        method: POST
+        description: Execute play/continue/stop command directly to a template
+        body:
+          type: json
+          data:
+            command: '{{tools.command}}'
+            template: '{{tools.template}}'
+            fields: '{{tools.fields}}'
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+    - name: files
+      path: /api/v1/getFileList
+      description: File listing from ASSETS folder
+      operations:
+      - name: get-file-list
+        method: GET
+        description: List files in a given ASSETS subfolder
+        inputParameters:
+        - name: folder
+          in: query
+          type: string
+          required: true
+          description: Subfolder path relative to ASSETS
+        outputRawFormat: json
+        outputParameters:
+        - name: files
+          type: array
+          value: $.files
+    - name: data
+      path: /api/v1/saveCustomJSON
+      description: Custom JSON data persistence
+      operations:
+      - name: save-custom-json
+        method: POST
+        description: Save arbitrary JSON data to disk for persistence
+        body:
+          type: json
+          data:
+            filename: '{{tools.filename}}'
+            data: '{{tools.data}}'
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+    - name: extensions
+      path: /api/v1/invokeExtensionFunction
+      description: SPX extension function invocation
+      operations:
+      - name: invoke-extension-function
+        method: POST
+        description: Invoke a function in a custom SPX extension
+        body:
+          type: json
+          data:
+            extension: '{{tools.extension}}'
+            function: '{{tools.function}}'
+            params: '{{tools.params}}'
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
   exposes:
-    - type: rest
-      port: 8080
-      namespace: live-graphics-api
-      description: "Unified REST API for live graphics production control via SPX-GC."
-      resources:
-        - path: /v1/rundowns
-          name: rundowns
-          description: "Load and manage SPX rundowns"
-          operations:
-            - method: POST
-              name: load-rundown
-              description: "Load a rundown file into the SPX system"
-              call: "spx-graphics.load-rundown"
-              with:
-                file: "rest.file"
-              outputParameters:
-                - type: object
-                  mapping: "$."
-        - path: /v1/rundowns/focus/first
-          name: focus-first
-          description: "Move rundown focus to the first item"
-          operations:
-            - method: POST
-              name: focus-first-item
-              description: "Set focus to the first rundown item"
-              call: "spx-graphics.focus-first-item"
-              outputParameters:
-                - type: object
-                  mapping: "$."
-        - path: /v1/rundowns/focus/next
-          name: focus-next
-          description: "Move rundown focus forward"
-          operations:
-            - method: POST
-              name: focus-next-item
-              description: "Advance focus to the next rundown item"
-              call: "spx-graphics.focus-next-item"
-              outputParameters:
-                - type: object
-                  mapping: "$."
-        - path: /v1/rundowns/focus/previous
-          name: focus-previous
-          description: "Move rundown focus backward"
-          operations:
-            - method: POST
-              name: focus-previous-item
-              description: "Move focus to the previous rundown item"
-              call: "spx-graphics.focus-previous-item"
-              outputParameters:
-                - type: object
-                  mapping: "$."
-        - path: /v1/items/play
-          name: item-play
-          description: "Trigger playback of the focused graphic"
-          operations:
-            - method: POST
-              name: play-item
-              description: "Play the currently focused rundown item"
-              call: "spx-graphics.play-item"
-              outputParameters:
-                - type: object
-                  mapping: "$."
-        - path: /v1/items/stop
-          name: item-stop
-          description: "Stop the focused graphic"
-          operations:
-            - method: POST
-              name: stop-item
-              description: "Stop the currently focused rundown item"
-              call: "spx-graphics.stop-item"
-              outputParameters:
-                - type: object
-                  mapping: "$."
-        - path: /v1/items/continue
-          name: item-continue
-          description: "Advance the focused graphic animation"
-          operations:
-            - method: POST
-              name: continue-item
-              description: "Issue continue command to the focused item"
-              call: "spx-graphics.continue-item"
-              outputParameters:
-                - type: object
-                  mapping: "$."
-        - path: /v1/items/{id}
-          name: item-update
-          description: "Update data fields for a rundown item"
-          operations:
-            - method: PUT
-              name: update-item
-              description: "Update template field values for a specific item"
-              call: "spx-graphics.update-item"
-              with:
-                project: "rest.project"
-                rundown: "rest.rundown"
-                item: "rest.id"
-                fields: "rest.fields"
-              outputParameters:
-                - type: object
-                  mapping: "$."
-        - path: /v1/playout
-          name: direct-playout
-          description: "Direct template playout without rundown"
-          operations:
-            - method: POST
-              name: direct-play-out
-              description: "Play/stop/continue a template directly"
-              call: "spx-graphics.direct-play-out"
-              with:
-                command: "rest.command"
-                template: "rest.template"
-                fields: "rest.fields"
-              outputParameters:
-                - type: object
-                  mapping: "$."
-        - path: /v1/files
-          name: assets
-          description: "Browse media asset files"
-          operations:
-            - method: GET
-              name: get-file-list
-              description: "List files in a given ASSETS subfolder"
-              call: "spx-graphics.get-file-list"
-              with:
-                folder: "rest.folder"
-              outputParameters:
-                - type: object
-                  mapping: "$."
-        - path: /v1/extensions
-          name: extensions
-          description: "Invoke custom SPX extension functions"
-          operations:
-            - method: POST
-              name: invoke-extension-function
-              description: "Call a function in a registered SPX extension"
-              call: "spx-graphics.invoke-extension-function"
-              with:
-                extension: "rest.extension"
-                function: "rest.function"
-                params: "rest.params"
-              outputParameters:
-                - type: object
-                  mapping: "$."
-
-    - type: mcp
-      port: 9090
-      namespace: live-graphics-mcp
-      transport: http
-      description: "MCP server for AI-assisted live graphics production control."
-      tools:
-        - name: load-rundown
-          description: >-
-            Load a rundown file into SPX. Specify the project and rundown name
-            in 'ProjectName/RundownName' format.
-          hints:
-            readOnly: false
-            idempotent: true
-          call: "spx-graphics.load-rundown"
-          with:
-            file: "tools.file"
-          outputParameters:
-            - type: object
-              mapping: "$."
-        - name: focus-first-item
-          description: "Move the rundown focus to the very first item."
-          hints:
-            readOnly: false
-            idempotent: true
-          call: "spx-graphics.focus-first-item"
-          outputParameters:
-            - type: object
-              mapping: "$."
-        - name: focus-next-item
-          description: "Advance the rundown focus to the next item."
-          hints:
-            readOnly: false
-            idempotent: false
-          call: "spx-graphics.focus-next-item"
-          outputParameters:
-            - type: object
-              mapping: "$."
-        - name: focus-previous-item
-          description: "Move the rundown focus back to the previous item."
-          hints:
-            readOnly: false
-            idempotent: false
-          call: "spx-graphics.focus-previous-item"
-          outputParameters:
-            - type: object
-              mapping: "$."
-        - name: play-graphic
-          description: >-
-            Trigger playback of the currently focused rundown item, making the
-            graphic visible in the live output.
-          hints:
-            readOnly: false
-            destructive: false
-          call: "spx-graphics.play-item"
-          outputParameters:
-            - type: object
-              mapping: "$."
-        - name: stop-graphic
-          description: >-
-            Stop and remove the currently focused graphic from the live output.
-          hints:
-            readOnly: false
-            destructive: false
-          call: "spx-graphics.stop-item"
-          outputParameters:
-            - type: object
-              mapping: "$."
-        - name: continue-graphic
-          description: >-
-            Issue a continue command to advance the currently focused graphic
-            to its next animation state or page.
-          hints:
-            readOnly: false
-            destructive: false
-          call: "spx-graphics.continue-item"
-          outputParameters:
-            - type: object
-              mapping: "$."
-        - name: update-graphic-data
-          description: >-
-            Update the text, images, or other template field values for a specific
-            rundown item identified by project, rundown, and item index.
-          hints:
-            readOnly: false
-            idempotent: true
-          call: "spx-graphics.update-item"
-          with:
-            project: "tools.project"
-            rundown: "tools.rundown"
-            item: "tools.item"
-            fields: "tools.fields"
-          outputParameters:
-            - type: object
-              mapping: "$."
-        - name: direct-playout
-          description: >-
-            Directly play, continue, or stop a graphics template without needing
-            it in a rundown. Useful for ad-hoc graphics or automated triggers.
-          hints:
-            readOnly: false
-            destructive: false
-          call: "spx-graphics.direct-play-out"
-          with:
-            command: "tools.command"
-            template: "tools.template"
-            fields: "tools.fields"
-          outputParameters:
-            - type: object
-              mapping: "$."
-        - name: list-asset-files
-          description: >-
-            List files available in a given subfolder of the SPX ASSETS directory.
-            Useful for populating template dropdowns or media selection.
-          hints:
-            readOnly: true
-            idempotent: true
-          call: "spx-graphics.get-file-list"
-          with:
-            folder: "tools.folder"
-          outputParameters:
-            - type: object
-              mapping: "$."
-        - name: invoke-extension-function
-          description: >-
-            Call a named function in a custom SPX extension. Used for advanced
-            graphics like sports scoring, live timing, and custom data-driven graphics.
-          hints:
-            readOnly: false
-            destructive: false
-          call: "spx-graphics.invoke-extension-function"
-          with:
-            extension: "tools.extension"
-            function: "tools.function"
-            params: "tools.params"
-          outputParameters:
-            - type: object
-              mapping: "$."
+  - type: rest
+    port: 8080
+    namespace: live-graphics-api
+    description: Unified REST API for live graphics production control via SPX-GC.
+    resources:
+    - path: /v1/rundowns
+      name: rundowns
+      description: Load and manage SPX rundowns
+      operations:
+      - method: POST
+        name: load-rundown
+        description: Load a rundown file into the SPX system
+        call: spx-graphics.load-rundown
+        with:
+          file: rest.file
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/rundowns/focus/first
+      name: focus-first
+      description: Move rundown focus to the first item
+      operations:
+      - method: POST
+        name: focus-first-item
+        description: Set focus to the first rundown item
+        call: spx-graphics.focus-first-item
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/rundowns/focus/next
+      name: focus-next
+      description: Move rundown focus forward
+      operations:
+      - method: POST
+        name: focus-next-item
+        description: Advance focus to the next rundown item
+        call: spx-graphics.focus-next-item
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/rundowns/focus/previous
+      name: focus-previous
+      description: Move rundown focus backward
+      operations:
+      - method: POST
+        name: focus-previous-item
+        description: Move focus to the previous rundown item
+        call: spx-graphics.focus-previous-item
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/items/play
+      name: item-play
+      description: Trigger playback of the focused graphic
+      operations:
+      - method: POST
+        name: play-item
+        description: Play the currently focused rundown item
+        call: spx-graphics.play-item
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/items/stop
+      name: item-stop
+      description: Stop the focused graphic
+      operations:
+      - method: POST
+        name: stop-item
+        description: Stop the currently focused rundown item
+        call: spx-graphics.stop-item
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/items/continue
+      name: item-continue
+      description: Advance the focused graphic animation
+      operations:
+      - method: POST
+        name: continue-item
+        description: Issue continue command to the focused item
+        call: spx-graphics.continue-item
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/items/{id}
+      name: item-update
+      description: Update data fields for a rundown item
+      operations:
+      - method: PUT
+        name: update-item
+        description: Update template field values for a specific item
+        call: spx-graphics.update-item
+        with:
+          project: rest.project
+          rundown: rest.rundown
+          item: rest.id
+          fields: rest.fields
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/playout
+      name: direct-playout
+      description: Direct template playout without rundown
+      operations:
+      - method: POST
+        name: direct-play-out
+        description: Play/stop/continue a template directly
+        call: spx-graphics.direct-play-out
+        with:
+          command: rest.command
+          template: rest.template
+          fields: rest.fields
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/files
+      name: assets
+      description: Browse media asset files
+      operations:
+      - method: GET
+        name: get-file-list
+        description: List files in a given ASSETS subfolder
+        call: spx-graphics.get-file-list
+        with:
+          folder: rest.folder
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/extensions
+      name: extensions
+      description: Invoke custom SPX extension functions
+      operations:
+      - method: POST
+        name: invoke-extension-function
+        description: Call a function in a registered SPX extension
+        call: spx-graphics.invoke-extension-function
+        with:
+          extension: rest.extension
+          function: rest.function
+          params: rest.params
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    port: 9090
+    namespace: live-graphics-mcp
+    transport: http
+    description: MCP server for AI-assisted live graphics production control.
+    tools:
+    - name: load-rundown
+      description: Load a rundown file into SPX. Specify the project and rundown name in 'ProjectName/RundownName' format.
+      hints:
+        readOnly: false
+        idempotent: true
+      call: spx-graphics.load-rundown
+      with:
+        file: tools.file
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: focus-first-item
+      description: Move the rundown focus to the very first item.
+      hints:
+        readOnly: false
+        idempotent: true
+      call: spx-graphics.focus-first-item
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: focus-next-item
+      description: Advance the rundown focus to the next item.
+      hints:
+        readOnly: false
+        idempotent: false
+      call: spx-graphics.focus-next-item
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: focus-previous-item
+      description: Move the rundown focus back to the previous item.
+      hints:
+        readOnly: false
+        idempotent: false
+      call: spx-graphics.focus-previous-item
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: play-graphic
+      description: Trigger playback of the currently focused rundown item, making the graphic visible in the live output.
+      hints:
+        readOnly: false
+        destructive: false
+      call: spx-graphics.play-item
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: stop-graphic
+      description: Stop and remove the currently focused graphic from the live output.
+      hints:
+        readOnly: false
+        destructive: false
+      call: spx-graphics.stop-item
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: continue-graphic
+      description: Issue a continue command to advance the currently focused graphic to its next animation state or page.
+      hints:
+        readOnly: false
+        destructive: false
+      call: spx-graphics.continue-item
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: update-graphic-data
+      description: Update the text, images, or other template field values for a specific rundown item identified by project,
+        rundown, and item index.
+      hints:
+        readOnly: false
+        idempotent: true
+      call: spx-graphics.update-item
+      with:
+        project: tools.project
+        rundown: tools.rundown
+        item: tools.item
+        fields: tools.fields
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: direct-playout
+      description: Directly play, continue, or stop a graphics template without needing it in a rundown. Useful for ad-hoc
+        graphics or automated triggers.
+      hints:
+        readOnly: false
+        destructive: false
+      call: spx-graphics.direct-play-out
+      with:
+        command: tools.command
+        template: tools.template
+        fields: tools.fields
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: list-asset-files
+      description: List files available in a given subfolder of the SPX ASSETS directory. Useful for populating template dropdowns
+        or media selection.
+      hints:
+        readOnly: true
+        idempotent: true
+      call: spx-graphics.get-file-list
+      with:
+        folder: tools.folder
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: invoke-extension-function
+      description: Call a named function in a custom SPX extension. Used for advanced graphics like sports scoring, live timing,
+        and custom data-driven graphics.
+      hints:
+        readOnly: false
+        destructive: false
+      call: spx-graphics.invoke-extension-function
+      with:
+        extension: tools.extension
+        function: tools.function
+        params: tools.params
+      outputParameters:
+      - type: object
+        mapping: $.
