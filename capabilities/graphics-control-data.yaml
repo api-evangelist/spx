@@ -1,0 +1,119 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: SPX Graphics Control API — Data
+  description: 'SPX Graphics Control API — Data. 2 operations. Lead operation: Feed Proxy. Self-contained Naftiko capability
+    covering one Spx business surface.'
+  tags:
+  - Spx
+  - Data
+  created: '2026-05-19'
+  modified: '2026-05-19'
+binds:
+- namespace: env
+  keys:
+    SPX_API_KEY: SPX_API_KEY
+capability:
+  consumes:
+  - type: http
+    namespace: graphics-control-data
+    baseUri: http://localhost:5656
+    description: SPX Graphics Control API — Data business capability. Self-contained, no shared references.
+    resources:
+    - name: api-v1-feedproxy
+      path: /api/v1/feedproxy
+      operations:
+      - name: feedproxy
+        method: GET
+        description: Feed Proxy
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: url
+          in: query
+          type: string
+          description: The target URL to proxy the request to
+          required: true
+    - name: api-v1-saveCustomJSON
+      path: /api/v1/saveCustomJSON
+      operations:
+      - name: savecustomjson
+        method: POST
+        description: Save Custom JSON
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+  exposes:
+  - type: rest
+    namespace: graphics-control-data-rest
+    port: 8080
+    description: REST adapter for SPX Graphics Control API — Data. One Spectral-compliant resource per consumed operation,
+      prefixed with /v1.
+    resources:
+    - path: /v1/api/v1/feedproxy
+      name: api-v1-feedproxy
+      description: REST surface for api-v1-feedproxy.
+      operations:
+      - method: GET
+        name: feedproxy
+        description: Feed Proxy
+        call: graphics-control-data.feedproxy
+        with:
+          url: rest.url
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/api/v1/savecustomjson
+      name: api-v1-savecustomjson
+      description: REST surface for api-v1-saveCustomJSON.
+      operations:
+      - method: POST
+        name: savecustomjson
+        description: Save Custom JSON
+        call: graphics-control-data.savecustomjson
+        with:
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: graphics-control-data-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for SPX Graphics Control API — Data. One tool per consumed operation, routed inline through this
+      capability's consumes block.
+    tools:
+    - name: feed-proxy
+      description: Feed Proxy
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: graphics-control-data.feedproxy
+      with:
+        url: tools.url
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: save-custom-json
+      description: Save Custom JSON
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: graphics-control-data.savecustomjson
+      with:
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
