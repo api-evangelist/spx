@@ -1,0 +1,331 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "SPX Graphics Control API",
+    "version": "1.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Rundown",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Load Rundown",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "http://localhost:5656/api/v1/rundown/load",
+            "params": [
+              {
+                "name": "file",
+                "value": "MyFirstProject/MyFirstRundown",
+                "type": "query",
+                "description": "Path to the rundown file in format ProjectName/RundownName (e.g. MyFirstProject/MyFirstRundown)"
+              },
+              {
+                "name": "apikey",
+                "value": "",
+                "type": "query",
+                "description": "API key for authentication. Required only if the SPX configuration has an apikey value set. Leave empty if no restriction is configured."
+              }
+            ]
+          },
+          "docs": "Opens a specific rundown file from the given project. The file parameter should be in the format ProjectName/RundownName."
+        },
+        {
+          "info": {
+            "name": "Focus First Item",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "http://localhost:5656/api/v1/rundown/focusFirst",
+            "params": [
+              {
+                "name": "apikey",
+                "value": "",
+                "type": "query",
+                "description": "API key for authentication. Required only if the SPX configuration has an apikey value set. Leave empty if no restriction is configured."
+              }
+            ]
+          },
+          "docs": "Moves focus to the first item on the rundown."
+        },
+        {
+          "info": {
+            "name": "Focus Next Item",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "http://localhost:5656/api/v1/rundown/focusNext",
+            "params": [
+              {
+                "name": "apikey",
+                "value": "",
+                "type": "query",
+                "description": "API key for authentication. Required only if the SPX configuration has an apikey value set. Leave empty if no restriction is configured."
+              }
+            ]
+          },
+          "docs": "Moves focus down to the next item in the rundown."
+        },
+        {
+          "info": {
+            "name": "Focus Previous Item",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "http://localhost:5656/api/v1/rundown/focusPrevious",
+            "params": [
+              {
+                "name": "apikey",
+                "value": "",
+                "type": "query",
+                "description": "API key for authentication. Required only if the SPX configuration has an apikey value set. Leave empty if no restriction is configured."
+              }
+            ]
+          },
+          "docs": "Moves focus up to the previous item in the rundown."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Item",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Play Item",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "http://localhost:5656/api/v1/item/play",
+            "params": [
+              {
+                "name": "apikey",
+                "value": "",
+                "type": "query",
+                "description": "API key for authentication. Required only if the SPX configuration has an apikey value set. Leave empty if no restriction is configured."
+              }
+            ]
+          },
+          "docs": "Issues a play command to the currently focused item on the rundown, triggering the graphic to appear on the output."
+        },
+        {
+          "info": {
+            "name": "Stop Item",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "http://localhost:5656/api/v1/item/stop",
+            "params": [
+              {
+                "name": "apikey",
+                "value": "",
+                "type": "query",
+                "description": "API key for authentication. Required only if the SPX configuration has an apikey value set. Leave empty if no restriction is configured."
+              }
+            ]
+          },
+          "docs": "Issues a stop command to the currently focused item, removing the graphic from the output."
+        },
+        {
+          "info": {
+            "name": "Continue Item",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "http://localhost:5656/api/v1/item/continue",
+            "params": [
+              {
+                "name": "apikey",
+                "value": "",
+                "type": "query",
+                "description": "API key for authentication. Required only if the SPX configuration has an apikey value set. Leave empty if no restriction is configured."
+              }
+            ]
+          },
+          "docs": "Issues a continue command to the currently focused item, advancing the graphic animation to its next state."
+        },
+        {
+          "info": {
+            "name": "Update Item",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "http://localhost:5656/api/v1/item/update",
+            "params": [
+              {
+                "name": "apikey",
+                "value": "",
+                "type": "query",
+                "description": "API key for authentication. Required only if the SPX configuration has an apikey value set. Leave empty if no restriction is configured."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Updates the data fields of a specific rundown item. Can be used to change text, images, or other template variables programmatically."
+        },
+        {
+          "info": {
+            "name": "Direct Play Out",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "http://localhost:5656/api/v1/directplayout",
+            "params": [
+              {
+                "name": "apikey",
+                "value": "",
+                "type": "query",
+                "description": "API key for authentication. Required only if the SPX configuration has an apikey value set. Leave empty if no restriction is configured."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Executes a direct play, continue, or stop command to a template without requiring the item to be in the current rundown. Introduced in v1.0.12. Useful for triggering graphics directly from external systems."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Files",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get File List",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "http://localhost:5656/api/v1/getFileList",
+            "params": [
+              {
+                "name": "folder",
+                "value": "images",
+                "type": "query",
+                "description": "Subfolder path relative to the ASSETS directory"
+              },
+              {
+                "name": "apikey",
+                "value": "",
+                "type": "query",
+                "description": "API key for authentication. Required only if the SPX configuration has an apikey value set. Leave empty if no restriction is configured."
+              }
+            ]
+          },
+          "docs": "Returns a list of files from a given subfolder within the ASSETS folder of the SPX installation. Useful for populating template dropdowns or media selection UIs."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Data",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Save Custom JSON",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "http://localhost:5656/api/v1/saveCustomJSON",
+            "params": [
+              {
+                "name": "apikey",
+                "value": "",
+                "type": "query",
+                "description": "API key for authentication. Required only if the SPX configuration has an apikey value set. Leave empty if no restriction is configured."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Saves arbitrary JSON data to disk for persistence in app extensions. This POST handler can be used to store state that persists across SPX restarts, such as scores, counters, or configuration data."
+        },
+        {
+          "info": {
+            "name": "Feed Proxy",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "http://localhost:5656/api/v1/feedproxy",
+            "params": [
+              {
+                "name": "url",
+                "value": "",
+                "type": "query",
+                "description": "The target URL to proxy the request to"
+              },
+              {
+                "name": "apikey",
+                "value": "",
+                "type": "query",
+                "description": "API key for authentication. Required only if the SPX configuration has an apikey value set. Leave empty if no restriction is configured."
+              }
+            ]
+          },
+          "docs": "A proxy endpoint that forwards HTTP requests to external URLs, supporting custom headers for authentication. Useful for working around CORS restrictions when fetching external data feeds for template population."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Extensions",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Invoke Extension Function",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "http://localhost:5656/api/v1/invokeExtensionFunction",
+            "params": [
+              {
+                "name": "apikey",
+                "value": "",
+                "type": "query",
+                "description": "API key for authentication. Required only if the SPX configuration has an apikey value set. Leave empty if no restriction is configured."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Invokes an exposed function in a custom-built SPX extension. This allows external devices such as Stream Deck buttons to drive custom extension logic, enabling advanced applications like sports scoring and live timing. Introduced in v1.3."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}
