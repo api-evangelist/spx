@@ -48,6 +48,8 @@ apis:
       - type: GitHub
         url: https://github.com/TuomoKu/SPX-GC
 common:
+  - type: DomainSecurity
+    url: security/spx-domain-security.yml
   - type: LinkedIn
     url: https://www.linkedin.com/company/spxgraphics
   - type: Website
@@ -58,6 +60,8 @@ common:
     url: https://spxgc.tawk.help/
   - type: KnowledgeBase
     url: https://spxgc.tawk.help/
+  - url: https://spxgraphics.com/blog
+    type: Blog
 maintainers:
   - name: Tuomo Kulomaa
     url: https://github.com/TuomoKu
