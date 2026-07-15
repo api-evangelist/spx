@@ -48,6 +48,8 @@ apis:
       - type: GitHub
         url: https://github.com/TuomoKu/SPX-GC
 common:
+  - type: AgenticAccess
+    url: agentic-access/spx-agentic-access.yml
   - type: DomainSecurity
     url: security/spx-domain-security.yml
   - type: LinkedIn
