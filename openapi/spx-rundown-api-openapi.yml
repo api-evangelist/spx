@@ -1,0 +1,119 @@
+openapi: 3.1.0
+info:
+  title: SPX Graphics Control Data Rundown API
+  description: The SPX Graphics Control REST API provides external control over the SPX-GC (SPX Graphics Controller) system for live video productions and live streams. It allows external applications and devices such as the Elgato Stream Deck to trigger graphics playback, control rundowns, manage templates, load projects, and interact with custom SPX extensions. The API runs locally at http://localhost:5656 and supports optional API key authentication via URL parameter.
+  version: '1.0'
+  contact:
+    name: SPX Graphics Support
+    url: https://spxgc.tawk.help/
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+servers:
+- url: http://localhost:5656
+  description: Local SPX-GC Instance (default port)
+- url: http://localhost:5000
+  description: Legacy Local SPX-GC Instance
+security: []
+tags:
+- name: Rundown
+  description: Control rundown focus and item playback
+paths:
+  /api/v1/rundown/load:
+    get:
+      operationId: loadRundown
+      summary: Load Rundown
+      description: Opens a specific rundown file from the given project. The file parameter should be in the format ProjectName/RundownName.
+      tags:
+      - Rundown
+      parameters:
+      - name: file
+        in: query
+        description: Path to the rundown file in format ProjectName/RundownName (e.g. MyFirstProject/MyFirstRundown)
+        required: true
+        schema:
+          type: string
+        example: MyFirstProject/MyFirstRundown
+      - $ref: '#/components/parameters/apikey'
+      responses:
+        '200':
+          description: Rundown loaded successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+        '400':
+          description: Bad request or rundown not found
+  /api/v1/rundown/focusFirst:
+    get:
+      operationId: focusFirstItem
+      summary: Focus First Item
+      description: Moves focus to the first item on the rundown.
+      tags:
+      - Rundown
+      parameters:
+      - $ref: '#/components/parameters/apikey'
+      responses:
+        '200':
+          description: Focus moved to first item
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+  /api/v1/rundown/focusNext:
+    get:
+      operationId: focusNextItem
+      summary: Focus Next Item
+      description: Moves focus down to the next item in the rundown.
+      tags:
+      - Rundown
+      parameters:
+      - $ref: '#/components/parameters/apikey'
+      responses:
+        '200':
+          description: Focus moved to next item
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+  /api/v1/rundown/focusPrevious:
+    get:
+      operationId: focusPreviousItem
+      summary: Focus Previous Item
+      description: Moves focus up to the previous item in the rundown.
+      tags:
+      - Rundown
+      parameters:
+      - $ref: '#/components/parameters/apikey'
+      responses:
+        '200':
+          description: Focus moved to previous item
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+components:
+  parameters:
+    apikey:
+      name: apikey
+      in: query
+      description: API key for authentication. Required only if the SPX configuration has an apikey value set. Leave empty if no restriction is configured.
+      required: false
+      schema:
+        type: string
+  schemas:
+    SuccessResponse:
+      type: object
+      description: Standard SPX API success response
+      properties:
+        status:
+          type: string
+          description: Response status
+          example: ok
+        message:
+          type: string
+          description: Human-readable status message
+          example: Command executed successfully
+externalDocs:
+  description: SPX Graphics API Documentation
+  url: https://spxgc.tawk.help/article/help-api

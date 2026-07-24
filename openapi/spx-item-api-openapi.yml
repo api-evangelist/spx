@@ -1,0 +1,198 @@
+openapi: 3.1.0
+info:
+  title: SPX Graphics Control Data Item API
+  description: The SPX Graphics Control REST API provides external control over the SPX-GC (SPX Graphics Controller) system for live video productions and live streams. It allows external applications and devices such as the Elgato Stream Deck to trigger graphics playback, control rundowns, manage templates, load projects, and interact with custom SPX extensions. The API runs locally at http://localhost:5656 and supports optional API key authentication via URL parameter.
+  version: '1.0'
+  contact:
+    name: SPX Graphics Support
+    url: https://spxgc.tawk.help/
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+servers:
+- url: http://localhost:5656
+  description: Local SPX-GC Instance (default port)
+- url: http://localhost:5000
+  description: Legacy Local SPX-GC Instance
+security: []
+tags:
+- name: Item
+  description: Control individual rundown items (play, stop, continue, update)
+paths:
+  /api/v1/item/play:
+    get:
+      operationId: playItem
+      summary: Play Item
+      description: Issues a play command to the currently focused item on the rundown, triggering the graphic to appear on the output.
+      tags:
+      - Item
+      parameters:
+      - $ref: '#/components/parameters/apikey'
+      responses:
+        '200':
+          description: Item play command issued
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+  /api/v1/item/stop:
+    get:
+      operationId: stopItem
+      summary: Stop Item
+      description: Issues a stop command to the currently focused item, removing the graphic from the output.
+      tags:
+      - Item
+      parameters:
+      - $ref: '#/components/parameters/apikey'
+      responses:
+        '200':
+          description: Item stop command issued
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+  /api/v1/item/continue:
+    get:
+      operationId: continueItem
+      summary: Continue Item
+      description: Issues a continue command to the currently focused item, advancing the graphic animation to its next state.
+      tags:
+      - Item
+      parameters:
+      - $ref: '#/components/parameters/apikey'
+      responses:
+        '200':
+          description: Item continue command issued
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+  /api/v1/item/update:
+    post:
+      operationId: updateItem
+      summary: Update Item
+      description: Updates the data fields of a specific rundown item. Can be used to change text, images, or other template variables programmatically.
+      tags:
+      - Item
+      parameters:
+      - $ref: '#/components/parameters/apikey'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ItemUpdateRequest'
+      responses:
+        '200':
+          description: Item updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+  /api/v1/directplayout:
+    post:
+      operationId: directPlayout
+      summary: Direct Play Out
+      description: Executes a direct play, continue, or stop command to a template without requiring the item to be in the current rundown. Introduced in v1.0.12. Useful for triggering graphics directly from external systems.
+      tags:
+      - Item
+      parameters:
+      - $ref: '#/components/parameters/apikey'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DirectPlayoutRequest'
+      responses:
+        '200':
+          description: Direct playout command executed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+components:
+  schemas:
+    ItemUpdateRequest:
+      type: object
+      description: Request body for updating a rundown item's data fields
+      properties:
+        project:
+          type: string
+          description: SPX project name
+          example: MyProject
+        rundown:
+          type: string
+          description: Rundown name within the project
+          example: LiveShow
+        item:
+          type: integer
+          description: Zero-based index of the item in the rundown
+          example: 0
+        fields:
+          type: array
+          description: Array of field name/value pairs to update
+          items:
+            $ref: '#/components/schemas/TemplateField'
+      required:
+      - project
+      - rundown
+      - item
+    SuccessResponse:
+      type: object
+      description: Standard SPX API success response
+      properties:
+        status:
+          type: string
+          description: Response status
+          example: ok
+        message:
+          type: string
+          description: Human-readable status message
+          example: Command executed successfully
+    TemplateField:
+      type: object
+      description: A template variable name/value pair
+      properties:
+        field:
+          type: string
+          description: Field name matching the template variable
+          example: f0
+        value:
+          type: string
+          description: Value to assign to the field
+          example: John Smith
+    DirectPlayoutRequest:
+      type: object
+      description: Request body for direct playout without a rundown context
+      properties:
+        command:
+          type: string
+          description: Playback command to issue
+          enum:
+          - play
+          - continue
+          - stop
+        template:
+          type: string
+          description: Path to the HTML template file
+          example: templates/lowerthird.html
+        fields:
+          type: array
+          description: Template field values for the playout
+          items:
+            $ref: '#/components/schemas/TemplateField'
+      required:
+      - command
+      - template
+  parameters:
+    apikey:
+      name: apikey
+      in: query
+      description: API key for authentication. Required only if the SPX configuration has an apikey value set. Leave empty if no restriction is configured.
+      required: false
+      schema:
+        type: string
+externalDocs:
+  description: SPX Graphics API Documentation
+  url: https://spxgc.tawk.help/article/help-api

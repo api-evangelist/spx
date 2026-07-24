@@ -1,0 +1,73 @@
+openapi: 3.1.0
+info:
+  title: SPX Graphics Control Data Files API
+  description: The SPX Graphics Control REST API provides external control over the SPX-GC (SPX Graphics Controller) system for live video productions and live streams. It allows external applications and devices such as the Elgato Stream Deck to trigger graphics playback, control rundowns, manage templates, load projects, and interact with custom SPX extensions. The API runs locally at http://localhost:5656 and supports optional API key authentication via URL parameter.
+  version: '1.0'
+  contact:
+    name: SPX Graphics Support
+    url: https://spxgc.tawk.help/
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+servers:
+- url: http://localhost:5656
+  description: Local SPX-GC Instance (default port)
+- url: http://localhost:5000
+  description: Legacy Local SPX-GC Instance
+security: []
+tags:
+- name: Files
+  description: File listing from the ASSETS folder
+paths:
+  /api/v1/getFileList:
+    get:
+      operationId: getFileList
+      summary: Get File List
+      description: Returns a list of files from a given subfolder within the ASSETS folder of the SPX installation. Useful for populating template dropdowns or media selection UIs.
+      tags:
+      - Files
+      parameters:
+      - name: folder
+        in: query
+        description: Subfolder path relative to the ASSETS directory
+        required: true
+        schema:
+          type: string
+        example: images
+      - $ref: '#/components/parameters/apikey'
+      responses:
+        '200':
+          description: File list returned
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FileListResponse'
+components:
+  parameters:
+    apikey:
+      name: apikey
+      in: query
+      description: API key for authentication. Required only if the SPX configuration has an apikey value set. Leave empty if no restriction is configured.
+      required: false
+      schema:
+        type: string
+  schemas:
+    FileListResponse:
+      type: object
+      description: Response containing a list of files from the ASSETS subfolder
+      properties:
+        status:
+          type: string
+          example: ok
+        files:
+          type: array
+          description: List of file names in the requested folder
+          items:
+            type: string
+          example:
+          - logo.png
+          - background.jpg
+          - overlay.mp4
+externalDocs:
+  description: SPX Graphics API Documentation
+  url: https://spxgc.tawk.help/article/help-api
