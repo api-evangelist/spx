@@ -5,48 +5,153 @@ description: >-
   provides a REST API for external control of graphics templates, rundowns, and playback via integrations with CasparCG,
   OBS, vMix, and similar broadcast software. SPX enables operators to trigger, control, and update live graphics
   overlays programmatically or via UI.
+accessModel:
+  pricing: freemium
+  onboarding: unknown
+  trial: false
+  try_now: false
+  public: false
+  label: Freemium
+  confidence: medium
+  source:
+  - plans
+  generated: '2026-07-22'
+  method: derived
 image: https://spxgraphics.com/wp-content/uploads/2021/05/spx-logo.png
 url: https://spxgraphics.com
 created: '2026-05-02'
 modified: '2026-05-19'
 apis:
-  - name: SPX Graphics Control API
-    description: >-
-      The SPX Graphics Control REST API provides external control over the SPX-GC graphics control system. It allows
-      applications and devices such as Stream Deck to trigger graphics playback, control rundowns, manage templates, and
-      interact with SPX extensions. The API runs locally on port 5656 and supports optional API key authentication.
-    image: https://spxgraphics.com/wp-content/uploads/2021/05/spx-logo.png
-    humanUrl: https://spxgc.tawk.help/article/help-api
-    baseUrl: http://localhost:5656
-    tags:
-      - Graphics
-      - Live Production
-      - Broadcast
-      - REST API
-    properties:
-      - type: Documentation
-        url: https://spxgc.tawk.help/article/help-api
-      - type: GitHub
-        url: https://github.com/TuomoKu/SPX-GC
-      - type: OpenAPI
-        url: openapi/spx-graphics-control-api-openapi.yml
-      - type: GettingStarted
-        url: https://spxgc.tawk.help/article/help-intro
-      - type: ChangeLog
-        url: https://github.com/TuomoKu/SPX-GC/blob/master/RELEASE_NOTES.md
-      - type: JSONSchema
-        url: json-schema/spx-rundown-item-schema.json
-      - type: JSONStructure
-        url: json-structure/spx-rundown-item-structure.json
-      - type: JSONLD
-        url: json-ld/spx-context.jsonld
-      - type: SpectralRules
-        url: rules/spx-rules.yml
-      - type: Vocabulary
-        url: vocabulary/spx-vocabulary.yml
-    contact:
-      - type: GitHub
-        url: https://github.com/TuomoKu/SPX-GC
+- aid: spx:spx-data-api
+  name: SPX Graphics Data API
+  description: Save and load custom JSON data
+  tags:
+  - Data
+  properties:
+  - type: OpenAPI
+    url: openapi/spx-data-api-openapi.yml
+  - type: Documentation
+    url: https://spxgc.tawk.help/article/help-api
+  - type: GitHub
+    url: https://github.com/TuomoKu/SPX-GC
+  - type: GettingStarted
+    url: https://spxgc.tawk.help/article/help-intro
+  - type: ChangeLog
+    url: https://github.com/TuomoKu/SPX-GC/blob/master/RELEASE_NOTES.md
+  - type: JSONSchema
+    url: json-schema/spx-rundown-item-schema.json
+  - type: JSONStructure
+    url: json-structure/spx-rundown-item-structure.json
+  - type: JSONLD
+    url: json-ld/spx-context.jsonld
+  - type: SpectralRules
+    url: rules/spx-rules.yml
+  - type: Vocabulary
+    url: vocabulary/spx-vocabulary.yml
+- aid: spx:spx-extensions-api
+  name: SPX Graphics Extensions API
+  description: Invoke functions in custom SPX extensions
+  tags:
+  - Extensions
+  properties:
+  - type: OpenAPI
+    url: openapi/spx-extensions-api-openapi.yml
+  - type: Documentation
+    url: https://spxgc.tawk.help/article/help-api
+  - type: GitHub
+    url: https://github.com/TuomoKu/SPX-GC
+  - type: GettingStarted
+    url: https://spxgc.tawk.help/article/help-intro
+  - type: ChangeLog
+    url: https://github.com/TuomoKu/SPX-GC/blob/master/RELEASE_NOTES.md
+  - type: JSONSchema
+    url: json-schema/spx-rundown-item-schema.json
+  - type: JSONStructure
+    url: json-structure/spx-rundown-item-structure.json
+  - type: JSONLD
+    url: json-ld/spx-context.jsonld
+  - type: SpectralRules
+    url: rules/spx-rules.yml
+  - type: Vocabulary
+    url: vocabulary/spx-vocabulary.yml
+- aid: spx:spx-files-api
+  name: SPX Graphics Files API
+  description: File listing from the ASSETS folder
+  tags:
+  - Files
+  properties:
+  - type: OpenAPI
+    url: openapi/spx-files-api-openapi.yml
+  - type: Documentation
+    url: https://spxgc.tawk.help/article/help-api
+  - type: GitHub
+    url: https://github.com/TuomoKu/SPX-GC
+  - type: GettingStarted
+    url: https://spxgc.tawk.help/article/help-intro
+  - type: ChangeLog
+    url: https://github.com/TuomoKu/SPX-GC/blob/master/RELEASE_NOTES.md
+  - type: JSONSchema
+    url: json-schema/spx-rundown-item-schema.json
+  - type: JSONStructure
+    url: json-structure/spx-rundown-item-structure.json
+  - type: JSONLD
+    url: json-ld/spx-context.jsonld
+  - type: SpectralRules
+    url: rules/spx-rules.yml
+  - type: Vocabulary
+    url: vocabulary/spx-vocabulary.yml
+- aid: spx:spx-item-api
+  name: SPX Graphics Item API
+  description: Control individual rundown items (play, stop, continue, update)
+  tags:
+  - Item
+  properties:
+  - type: OpenAPI
+    url: openapi/spx-item-api-openapi.yml
+  - type: Documentation
+    url: https://spxgc.tawk.help/article/help-api
+  - type: GitHub
+    url: https://github.com/TuomoKu/SPX-GC
+  - type: GettingStarted
+    url: https://spxgc.tawk.help/article/help-intro
+  - type: ChangeLog
+    url: https://github.com/TuomoKu/SPX-GC/blob/master/RELEASE_NOTES.md
+  - type: JSONSchema
+    url: json-schema/spx-rundown-item-schema.json
+  - type: JSONStructure
+    url: json-structure/spx-rundown-item-structure.json
+  - type: JSONLD
+    url: json-ld/spx-context.jsonld
+  - type: SpectralRules
+    url: rules/spx-rules.yml
+  - type: Vocabulary
+    url: vocabulary/spx-vocabulary.yml
+- aid: spx:spx-rundown-api
+  name: SPX Graphics Rundown API
+  description: Control rundown focus and item playback
+  tags:
+  - Rundown
+  properties:
+  - type: OpenAPI
+    url: openapi/spx-rundown-api-openapi.yml
+  - type: Documentation
+    url: https://spxgc.tawk.help/article/help-api
+  - type: GitHub
+    url: https://github.com/TuomoKu/SPX-GC
+  - type: GettingStarted
+    url: https://spxgc.tawk.help/article/help-intro
+  - type: ChangeLog
+    url: https://github.com/TuomoKu/SPX-GC/blob/master/RELEASE_NOTES.md
+  - type: JSONSchema
+    url: json-schema/spx-rundown-item-schema.json
+  - type: JSONStructure
+    url: json-structure/spx-rundown-item-structure.json
+  - type: JSONLD
+    url: json-ld/spx-context.jsonld
+  - type: SpectralRules
+    url: rules/spx-rules.yml
+  - type: Vocabulary
+    url: vocabulary/spx-vocabulary.yml
 common:
   - type: AgenticAccess
     url: agentic-access/spx-agentic-access.yml
