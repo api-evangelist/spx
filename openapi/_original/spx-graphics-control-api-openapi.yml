@@ -1,0 +1,457 @@
+openapi: 3.1.0
+info:
+  title: SPX Graphics Control API
+  description: >-
+    The SPX Graphics Control REST API provides external control over the SPX-GC
+    (SPX Graphics Controller) system for live video productions and live streams.
+    It allows external applications and devices such as the Elgato Stream Deck
+    to trigger graphics playback, control rundowns, manage templates, load projects,
+    and interact with custom SPX extensions. The API runs locally at http://localhost:5656
+    and supports optional API key authentication via URL parameter.
+  version: '1.0'
+  contact:
+    name: SPX Graphics Support
+    url: https://spxgc.tawk.help/
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+externalDocs:
+  description: SPX Graphics API Documentation
+  url: https://spxgc.tawk.help/article/help-api
+servers:
+  - url: http://localhost:5656
+    description: Local SPX-GC Instance (default port)
+  - url: http://localhost:5000
+    description: Legacy Local SPX-GC Instance
+tags:
+  - name: Rundown
+    description: Control rundown focus and item playback
+  - name: Item
+    description: Control individual rundown items (play, stop, continue, update)
+  - name: Project
+    description: Load and manage SPX projects and rundowns
+  - name: Files
+    description: File listing from the ASSETS folder
+  - name: Data
+    description: Save and load custom JSON data
+  - name: Extensions
+    description: Invoke functions in custom SPX extensions
+security: []
+paths:
+  /api/v1/rundown/load:
+    get:
+      operationId: loadRundown
+      summary: Load Rundown
+      description: >-
+        Opens a specific rundown file from the given project. The file parameter
+        should be in the format ProjectName/RundownName.
+      tags:
+        - Rundown
+      parameters:
+        - name: file
+          in: query
+          description: >-
+            Path to the rundown file in format ProjectName/RundownName
+            (e.g. MyFirstProject/MyFirstRundown)
+          required: true
+          schema:
+            type: string
+          example: MyFirstProject/MyFirstRundown
+        - $ref: '#/components/parameters/apikey'
+      responses:
+        '200':
+          description: Rundown loaded successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+        '400':
+          description: Bad request or rundown not found
+  /api/v1/rundown/focusFirst:
+    get:
+      operationId: focusFirstItem
+      summary: Focus First Item
+      description: Moves focus to the first item on the rundown.
+      tags:
+        - Rundown
+      parameters:
+        - $ref: '#/components/parameters/apikey'
+      responses:
+        '200':
+          description: Focus moved to first item
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+  /api/v1/rundown/focusNext:
+    get:
+      operationId: focusNextItem
+      summary: Focus Next Item
+      description: Moves focus down to the next item in the rundown.
+      tags:
+        - Rundown
+      parameters:
+        - $ref: '#/components/parameters/apikey'
+      responses:
+        '200':
+          description: Focus moved to next item
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+  /api/v1/rundown/focusPrevious:
+    get:
+      operationId: focusPreviousItem
+      summary: Focus Previous Item
+      description: Moves focus up to the previous item in the rundown.
+      tags:
+        - Rundown
+      parameters:
+        - $ref: '#/components/parameters/apikey'
+      responses:
+        '200':
+          description: Focus moved to previous item
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+  /api/v1/item/play:
+    get:
+      operationId: playItem
+      summary: Play Item
+      description: >-
+        Issues a play command to the currently focused item on the rundown,
+        triggering the graphic to appear on the output.
+      tags:
+        - Item
+      parameters:
+        - $ref: '#/components/parameters/apikey'
+      responses:
+        '200':
+          description: Item play command issued
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+  /api/v1/item/stop:
+    get:
+      operationId: stopItem
+      summary: Stop Item
+      description: >-
+        Issues a stop command to the currently focused item, removing
+        the graphic from the output.
+      tags:
+        - Item
+      parameters:
+        - $ref: '#/components/parameters/apikey'
+      responses:
+        '200':
+          description: Item stop command issued
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+  /api/v1/item/continue:
+    get:
+      operationId: continueItem
+      summary: Continue Item
+      description: >-
+        Issues a continue command to the currently focused item, advancing
+        the graphic animation to its next state.
+      tags:
+        - Item
+      parameters:
+        - $ref: '#/components/parameters/apikey'
+      responses:
+        '200':
+          description: Item continue command issued
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+  /api/v1/item/update:
+    post:
+      operationId: updateItem
+      summary: Update Item
+      description: >-
+        Updates the data fields of a specific rundown item. Can be used to
+        change text, images, or other template variables programmatically.
+      tags:
+        - Item
+      parameters:
+        - $ref: '#/components/parameters/apikey'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ItemUpdateRequest'
+      responses:
+        '200':
+          description: Item updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+  /api/v1/directplayout:
+    post:
+      operationId: directPlayout
+      summary: Direct Play Out
+      description: >-
+        Executes a direct play, continue, or stop command to a template without
+        requiring the item to be in the current rundown. Introduced in v1.0.12.
+        Useful for triggering graphics directly from external systems.
+      tags:
+        - Item
+      parameters:
+        - $ref: '#/components/parameters/apikey'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DirectPlayoutRequest'
+      responses:
+        '200':
+          description: Direct playout command executed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+  /api/v1/getFileList:
+    get:
+      operationId: getFileList
+      summary: Get File List
+      description: >-
+        Returns a list of files from a given subfolder within the ASSETS folder
+        of the SPX installation. Useful for populating template dropdowns or
+        media selection UIs.
+      tags:
+        - Files
+      parameters:
+        - name: folder
+          in: query
+          description: Subfolder path relative to the ASSETS directory
+          required: true
+          schema:
+            type: string
+          example: images
+        - $ref: '#/components/parameters/apikey'
+      responses:
+        '200':
+          description: File list returned
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FileListResponse'
+  /api/v1/saveCustomJSON:
+    post:
+      operationId: saveCustomJSON
+      summary: Save Custom JSON
+      description: >-
+        Saves arbitrary JSON data to disk for persistence in app extensions.
+        This POST handler can be used to store state that persists across
+        SPX restarts, such as scores, counters, or configuration data.
+      tags:
+        - Data
+      parameters:
+        - $ref: '#/components/parameters/apikey'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CustomJSONRequest'
+      responses:
+        '200':
+          description: Custom JSON saved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+  /api/v1/invokeExtensionFunction:
+    post:
+      operationId: invokeExtensionFunction
+      summary: Invoke Extension Function
+      description: >-
+        Invokes an exposed function in a custom-built SPX extension. This allows
+        external devices such as Stream Deck buttons to drive custom extension
+        logic, enabling advanced applications like sports scoring and live timing.
+        Introduced in v1.3.
+      tags:
+        - Extensions
+      parameters:
+        - $ref: '#/components/parameters/apikey'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ExtensionFunctionRequest'
+      responses:
+        '200':
+          description: Extension function invoked
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+  /api/v1/feedproxy:
+    get:
+      operationId: feedProxy
+      summary: Feed Proxy
+      description: >-
+        A proxy endpoint that forwards HTTP requests to external URLs, supporting
+        custom headers for authentication. Useful for working around CORS restrictions
+        when fetching external data feeds for template population.
+      tags:
+        - Data
+      parameters:
+        - name: url
+          in: query
+          description: The target URL to proxy the request to
+          required: true
+          schema:
+            type: string
+            format: uri
+        - $ref: '#/components/parameters/apikey'
+      responses:
+        '200':
+          description: Proxied response from external URL
+          content:
+            application/json:
+              schema:
+                type: object
+components:
+  parameters:
+    apikey:
+      name: apikey
+      in: query
+      description: >-
+        API key for authentication. Required only if the SPX configuration has
+        an apikey value set. Leave empty if no restriction is configured.
+      required: false
+      schema:
+        type: string
+  schemas:
+    SuccessResponse:
+      type: object
+      description: Standard SPX API success response
+      properties:
+        status:
+          type: string
+          description: Response status
+          example: ok
+        message:
+          type: string
+          description: Human-readable status message
+          example: Command executed successfully
+    ItemUpdateRequest:
+      type: object
+      description: Request body for updating a rundown item's data fields
+      properties:
+        project:
+          type: string
+          description: SPX project name
+          example: MyProject
+        rundown:
+          type: string
+          description: Rundown name within the project
+          example: LiveShow
+        item:
+          type: integer
+          description: Zero-based index of the item in the rundown
+          example: 0
+        fields:
+          type: array
+          description: Array of field name/value pairs to update
+          items:
+            $ref: '#/components/schemas/TemplateField'
+      required:
+        - project
+        - rundown
+        - item
+    DirectPlayoutRequest:
+      type: object
+      description: Request body for direct playout without a rundown context
+      properties:
+        command:
+          type: string
+          description: Playback command to issue
+          enum:
+            - play
+            - continue
+            - stop
+        template:
+          type: string
+          description: Path to the HTML template file
+          example: templates/lowerthird.html
+        fields:
+          type: array
+          description: Template field values for the playout
+          items:
+            $ref: '#/components/schemas/TemplateField'
+      required:
+        - command
+        - template
+    TemplateField:
+      type: object
+      description: A template variable name/value pair
+      properties:
+        field:
+          type: string
+          description: Field name matching the template variable
+          example: f0
+        value:
+          type: string
+          description: Value to assign to the field
+          example: John Smith
+    CustomJSONRequest:
+      type: object
+      description: Arbitrary JSON data payload to persist to disk
+      properties:
+        filename:
+          type: string
+          description: Name of the JSON file to save (without extension)
+          example: scores
+        data:
+          type: object
+          description: JSON data to persist
+          additionalProperties: true
+      required:
+        - filename
+        - data
+    ExtensionFunctionRequest:
+      type: object
+      description: Request to invoke a function defined in an SPX extension
+      properties:
+        extension:
+          type: string
+          description: Name of the SPX extension
+          example: SportsScoring
+        function:
+          type: string
+          description: Name of the function to invoke within the extension
+          example: incrementScore
+        params:
+          type: object
+          description: Optional parameters to pass to the function
+          additionalProperties: true
+      required:
+        - extension
+        - function
+    FileListResponse:
+      type: object
+      description: Response containing a list of files from the ASSETS subfolder
+      properties:
+        status:
+          type: string
+          example: ok
+        files:
+          type: array
+          description: List of file names in the requested folder
+          items:
+            type: string
+          example:
+            - logo.png
+            - background.jpg
+            - overlay.mp4

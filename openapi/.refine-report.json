@@ -1,0 +1,22 @@
+{
+  "provider": "spx",
+  "sources": [
+    "spx-data-api-openapi.yml",
+    "spx-extensions-api-openapi.yml",
+    "spx-files-api-openapi.yml",
+    "spx-item-api-openapi.yml",
+    "spx-rundown-api-openapi.yml"
+  ],
+  "outputs": [
+    "spx-data-api-openapi.yml",
+    "spx-extensions-api-openapi.yml",
+    "spx-files-api-openapi.yml",
+    "spx-item-api-openapi.yml",
+    "spx-rundown-api-openapi.yml"
+  ],
+  "archived": [],
+  "errors": [],
+  "warnings": [],
+  "notes": [],
+  "skipped": []
+}
