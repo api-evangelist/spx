@@ -1,0 +1,41 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "SPX Graphics Control Data Extensions API",
+    "version": "1.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Extensions",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Invoke Extension Function",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "http://localhost:5656/api/v1/invokeExtensionFunction",
+            "params": [
+              {
+                "name": "apikey",
+                "value": "",
+                "type": "query",
+                "description": "API key for authentication. Required only if the SPX configuration has an apikey value set. Leave empty if no restriction is configured."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Invokes an exposed function in a custom-built SPX extension. This allows external devices such as Stream Deck buttons to drive custom extension logic, enabling advanced applications like sports scoring and live timing. Introduced in v1.3."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

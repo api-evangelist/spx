@@ -1,0 +1,43 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "SPX Graphics Control Data Files API",
+    "version": "1.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Files",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get File List",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "http://localhost:5656/api/v1/getFileList",
+            "params": [
+              {
+                "name": "folder",
+                "value": "images",
+                "type": "query",
+                "description": "Subfolder path relative to the ASSETS directory"
+              },
+              {
+                "name": "apikey",
+                "value": "",
+                "type": "query",
+                "description": "API key for authentication. Required only if the SPX configuration has an apikey value set. Leave empty if no restriction is configured."
+              }
+            ]
+          },
+          "docs": "Returns a list of files from a given subfolder within the ASSETS folder of the SPX installation. Useful for populating template dropdowns or media selection UIs."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

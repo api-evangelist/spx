@@ -1,0 +1,66 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "SPX Graphics Control Data API",
+    "version": "1.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Data",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Save Custom JSON",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "http://localhost:5656/api/v1/saveCustomJSON",
+            "params": [
+              {
+                "name": "apikey",
+                "value": "",
+                "type": "query",
+                "description": "API key for authentication. Required only if the SPX configuration has an apikey value set. Leave empty if no restriction is configured."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Saves arbitrary JSON data to disk for persistence in app extensions. This POST handler can be used to store state that persists across SPX restarts, such as scores, counters, or configuration data."
+        },
+        {
+          "info": {
+            "name": "Feed Proxy",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "http://localhost:5656/api/v1/feedproxy",
+            "params": [
+              {
+                "name": "url",
+                "value": "",
+                "type": "query",
+                "description": "The target URL to proxy the request to"
+              },
+              {
+                "name": "apikey",
+                "value": "",
+                "type": "query",
+                "description": "API key for authentication. Required only if the SPX configuration has an apikey value set. Leave empty if no restriction is configured."
+              }
+            ]
+          },
+          "docs": "A proxy endpoint that forwards HTTP requests to external URLs, supporting custom headers for authentication. Useful for working around CORS restrictions when fetching external data feeds for template population."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

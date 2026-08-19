@@ -1,0 +1,139 @@
+{
+  "item": [
+    {
+      "id": "174d71e3-5075-4e36-bd33-eb649c88a478",
+      "name": "Extensions",
+      "description": {
+        "content": "Invoke functions in custom SPX extensions",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "feb55b0c-944a-48e2-8688-cd3fb4cf8ddf",
+          "name": "Invoke Extension Function",
+          "request": {
+            "name": "Invoke Extension Function",
+            "description": {
+              "content": "Invokes an exposed function in a custom-built SPX extension. This allows external devices such as Stream Deck buttons to drive custom extension logic, enabling advanced applications like sports scoring and live timing. Introduced in v1.3.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                "v1",
+                "invokeExtensionFunction"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "apikey",
+                  "value": "<string>",
+                  "description": "API key for authentication. Required only if the SPX configuration has an apikey value set. Leave empty if no restriction is configured."
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"extension\": \"<string>\",\n  \"function\": \"<string>\",\n  \"params\": {\n    \"key_0\": true,\n    \"key_1\": 1994.1768836448437\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "dd62c964-137b-45af-8006-761f98ad9992",
+              "name": "Extension function invoked",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "invokeExtensionFunction"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "apikey",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"extension\": \"SportsScoring\",\n  \"function\": \"incrementScore\",\n  \"params\": {\n    \"key_0\": false,\n    \"key_1\": 1550.3852499570958,\n    \"key_2\": 2509,\n    \"key_3\": false\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"status\": \"ok\",\n  \"message\": \"Command executed successfully\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "http://localhost:5656",
+      "key": "baseUrl"
+    }
+  ],
+  "info": {
+    "_postman_id": "e037dc0d-2753-4b87-9efd-c29572173dfd",
+    "name": "SPX Graphics Control Data Extensions API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "The SPX Graphics Control REST API provides external control over the SPX-GC (SPX Graphics Controller) system for live video productions and live streams. It allows external applications and devices such as the Elgato Stream Deck to trigger graphics playback, control rundowns, manage templates, load projects, and interact with custom SPX extensions. The API runs locally at http://localhost:5656 and supports optional API key authentication via URL parameter.\n\nContact Support:\n Name: SPX Graphics Support",
+      "type": "text/plain"
+    }
+  }
+}

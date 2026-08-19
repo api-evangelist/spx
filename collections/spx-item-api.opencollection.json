@@ -1,0 +1,121 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "SPX Graphics Control Data Item API",
+    "version": "1.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Item",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Play Item",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "http://localhost:5656/api/v1/item/play",
+            "params": [
+              {
+                "name": "apikey",
+                "value": "",
+                "type": "query",
+                "description": "API key for authentication. Required only if the SPX configuration has an apikey value set. Leave empty if no restriction is configured."
+              }
+            ]
+          },
+          "docs": "Issues a play command to the currently focused item on the rundown, triggering the graphic to appear on the output."
+        },
+        {
+          "info": {
+            "name": "Stop Item",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "http://localhost:5656/api/v1/item/stop",
+            "params": [
+              {
+                "name": "apikey",
+                "value": "",
+                "type": "query",
+                "description": "API key for authentication. Required only if the SPX configuration has an apikey value set. Leave empty if no restriction is configured."
+              }
+            ]
+          },
+          "docs": "Issues a stop command to the currently focused item, removing the graphic from the output."
+        },
+        {
+          "info": {
+            "name": "Continue Item",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "http://localhost:5656/api/v1/item/continue",
+            "params": [
+              {
+                "name": "apikey",
+                "value": "",
+                "type": "query",
+                "description": "API key for authentication. Required only if the SPX configuration has an apikey value set. Leave empty if no restriction is configured."
+              }
+            ]
+          },
+          "docs": "Issues a continue command to the currently focused item, advancing the graphic animation to its next state."
+        },
+        {
+          "info": {
+            "name": "Update Item",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "http://localhost:5656/api/v1/item/update",
+            "params": [
+              {
+                "name": "apikey",
+                "value": "",
+                "type": "query",
+                "description": "API key for authentication. Required only if the SPX configuration has an apikey value set. Leave empty if no restriction is configured."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Updates the data fields of a specific rundown item. Can be used to change text, images, or other template variables programmatically."
+        },
+        {
+          "info": {
+            "name": "Direct Play Out",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "http://localhost:5656/api/v1/directplayout",
+            "params": [
+              {
+                "name": "apikey",
+                "value": "",
+                "type": "query",
+                "description": "API key for authentication. Required only if the SPX configuration has an apikey value set. Leave empty if no restriction is configured."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Executes a direct play, continue, or stop command to a template without requiring the item to be in the current rundown. Introduced in v1.0.12. Useful for triggering graphics directly from external systems."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}
