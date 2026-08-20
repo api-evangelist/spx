@@ -79,6 +79,8 @@ apis:
   name: SPX Graphics Files API
   description: File listing from the ASSETS folder
   tags:
+  - File
+  tags_raw:
   - Files
   properties:
   - type: OpenAPI
