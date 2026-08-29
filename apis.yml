@@ -5,6 +5,17 @@ description: >-
   provides a REST API for external control of graphics templates, rundowns, and playback via integrations with CasparCG,
   OBS, vMix, and similar broadcast software. SPX enables operators to trigger, control, and update live graphics
   overlays programmatically or via UI.
+deliveryModel:
+  model: unknown
+  open_source: false
+  commercial: false
+  callable_host: false
+  label: Delivery model not determined — needs a product licence on record
+  confidence: low
+  source:
+  - openapi
+  generated: '2026-08-28'
+  method: derived
 specificationVersion: '0.23'
 accessModel:
   pricing: freemium
