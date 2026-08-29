@@ -167,6 +167,9 @@ apis:
   - type: Vocabulary
     url: vocabulary/spx-vocabulary.yml
 common:
+  - type: CapabilityMap
+    url: capabilities/spx-capability-edges.yml
+    name: SPX Graphics Business Capability Map
   - type: AgenticAccess
     url: agentic-access/spx-agentic-access.yml
   - type: DomainSecurity

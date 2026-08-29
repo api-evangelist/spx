@@ -1,0 +1,36 @@
+slug: spx
+provider: SPX Graphics
+generated_by: planning/capability-mapping/scripts/classify_capabilities.py
+model: claude-opus-5
+frame:
+- Media, Entertainment & Telecom Content
+min_confidence: 0.7
+capability_model:
+  source: https://github.com/vincentmakes/turbo-ea-capabilities
+  license: CC-BY-4.0
+  attribution: Turbo EA Capabilities by Vincent Verdet — Turbo EA, https://github.com/vincentmakes/turbo-ea-capabilities,
+    CC BY 4.0
+  notice: NOTICE
+edge_count: 2
+edges:
+- tag: Item
+  spec_file: spx-item-api-openapi.yml
+  capability_id: BC-3700.40
+  capability_id_l1: BC-3700
+  capability_name: Live Event & News Production Management
+  confidence: 0.72
+  evidence: Play Item / Stop Item / Continue Item / Direct Play Out on the graphics controller for 'live
+    video productions and live streams'
+  reason: These operations trigger and update on-air graphics items in real time during live production,
+    matching live event and news production (multi-camera direction and live graphics). Some ambiguity
+    with playlist/continuity management keeps confidence below 0.8.
+- tag: Rundown
+  spec_file: spx-rundown-api-openapi.yml
+  capability_id: BC-3700.40
+  capability_id_l1: BC-3700
+  capability_name: Live Event & News Production Management
+  confidence: 0.72
+  evidence: Load Rundown / Focus First Item / Focus Next Item — 'control rundowns' for live video productions
+  reason: Rundown loading and item focus is the running-order control used by an operator during live
+    production of shows, news and events, which maps to live event and news production management. Alternative
+    reading as transmission playlist/continuity keeps confidence moderate.
