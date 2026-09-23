@@ -1,6 +1,6 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  title: SPX Graphics Control Data Item API
+  title: SPX Graphics Control Item API
   description: The SPX Graphics Control REST API provides external control over the SPX-GC (SPX Graphics Controller) system for live video productions and live streams. It allows external applications and devices such as the Elgato Stream Deck to trigger graphics playback, control rundowns, manage templates, load projects, and interact with custom SPX extensions. The API runs locally at http://localhost:5656 and supports optional API key authentication via URL parameter.
   version: '1.0'
   contact:
@@ -113,6 +113,53 @@ paths:
                 $ref: '#/components/schemas/SuccessResponse'
 components:
   schemas:
+    TemplateField:
+      type: object
+      description: A template variable name/value pair
+      properties:
+        field:
+          type: string
+          description: Field name matching the template variable
+          example: f0
+        value:
+          type: string
+          description: Value to assign to the field
+          example: John Smith
+    SuccessResponse:
+      type: object
+      description: Standard SPX API success response
+      properties:
+        status:
+          type: string
+          description: Response status
+          example: ok
+        message:
+          type: string
+          description: Human-readable status message
+          example: Command executed successfully
+    DirectPlayoutRequest:
+      type: object
+      description: Request body for direct playout without a rundown context
+      properties:
+        command:
+          type: string
+          description: Playback command to issue
+          enum:
+          - play
+          - continue
+          - stop
+        template:
+          type: string
+          description: Path to the HTML template file
+          example: templates/lowerthird.html
+        fields:
+          type: array
+          description: Template field values for the playout
+          items:
+            $ref: '#/components/schemas/TemplateField'
+      required:
+      - command
+      - template
     ItemUpdateRequest:
       type: object
       description: Request body for updating a rundown item's data fields
@@ -138,53 +185,6 @@ components:
       - project
       - rundown
       - item
-    SuccessResponse:
-      type: object
-      description: Standard SPX API success response
-      properties:
-        status:
-          type: string
-          description: Response status
-          example: ok
-        message:
-          type: string
-          description: Human-readable status message
-          example: Command executed successfully
-    TemplateField:
-      type: object
-      description: A template variable name/value pair
-      properties:
-        field:
-          type: string
-          description: Field name matching the template variable
-          example: f0
-        value:
-          type: string
-          description: Value to assign to the field
-          example: John Smith
-    DirectPlayoutRequest:
-      type: object
-      description: Request body for direct playout without a rundown context
-      properties:
-        command:
-          type: string
-          description: Playback command to issue
-          enum:
-          - play
-          - continue
-          - stop
-        template:
-          type: string
-          description: Path to the HTML template file
-          example: templates/lowerthird.html
-        fields:
-          type: array
-          description: Template field values for the playout
-          items:
-            $ref: '#/components/schemas/TemplateField'
-      required:
-      - command
-      - template
   parameters:
     apikey:
       name: apikey

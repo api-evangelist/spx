@@ -1,7 +1,9 @@
 ---
 title: ITT CEO Luca Savi Discusses SPX FLOW Acquisition on ...
 url: https://www.linkedin.com/posts/itt_itt-flow-nyse-activity-7437515093598281728-QW7g
-date: '2026-05-25'
+published: ''
+date_basis: harvested
+harvested: '2026-05-25'
 query: '"SPX" press release artificial intelligence'
 position: 4
 source: serpapi-google
