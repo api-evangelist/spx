@@ -113,53 +113,6 @@ paths:
                 $ref: '#/components/schemas/SuccessResponse'
 components:
   schemas:
-    TemplateField:
-      type: object
-      description: A template variable name/value pair
-      properties:
-        field:
-          type: string
-          description: Field name matching the template variable
-          example: f0
-        value:
-          type: string
-          description: Value to assign to the field
-          example: John Smith
-    SuccessResponse:
-      type: object
-      description: Standard SPX API success response
-      properties:
-        status:
-          type: string
-          description: Response status
-          example: ok
-        message:
-          type: string
-          description: Human-readable status message
-          example: Command executed successfully
-    DirectPlayoutRequest:
-      type: object
-      description: Request body for direct playout without a rundown context
-      properties:
-        command:
-          type: string
-          description: Playback command to issue
-          enum:
-          - play
-          - continue
-          - stop
-        template:
-          type: string
-          description: Path to the HTML template file
-          example: templates/lowerthird.html
-        fields:
-          type: array
-          description: Template field values for the playout
-          items:
-            $ref: '#/components/schemas/TemplateField'
-      required:
-      - command
-      - template
     ItemUpdateRequest:
       type: object
       description: Request body for updating a rundown item's data fields
@@ -185,6 +138,53 @@ components:
       - project
       - rundown
       - item
+    SuccessResponse:
+      type: object
+      description: Standard SPX API success response
+      properties:
+        status:
+          type: string
+          description: Response status
+          example: ok
+        message:
+          type: string
+          description: Human-readable status message
+          example: Command executed successfully
+    TemplateField:
+      type: object
+      description: A template variable name/value pair
+      properties:
+        field:
+          type: string
+          description: Field name matching the template variable
+          example: f0
+        value:
+          type: string
+          description: Value to assign to the field
+          example: John Smith
+    DirectPlayoutRequest:
+      type: object
+      description: Request body for direct playout without a rundown context
+      properties:
+        command:
+          type: string
+          description: Playback command to issue
+          enum:
+          - play
+          - continue
+          - stop
+        template:
+          type: string
+          description: Path to the HTML template file
+          example: templates/lowerthird.html
+        fields:
+          type: array
+          description: Template field values for the playout
+          items:
+            $ref: '#/components/schemas/TemplateField'
+      required:
+      - command
+      - template
   parameters:
     apikey:
       name: apikey

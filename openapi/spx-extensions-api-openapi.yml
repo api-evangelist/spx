@@ -43,18 +43,6 @@ paths:
                 $ref: '#/components/schemas/SuccessResponse'
 components:
   schemas:
-    SuccessResponse:
-      type: object
-      description: Standard SPX API success response
-      properties:
-        status:
-          type: string
-          description: Response status
-          example: ok
-        message:
-          type: string
-          description: Human-readable status message
-          example: Command executed successfully
     ExtensionFunctionRequest:
       type: object
       description: Request to invoke a function defined in an SPX extension
@@ -74,6 +62,18 @@ components:
       required:
       - extension
       - function
+    SuccessResponse:
+      type: object
+      description: Standard SPX API success response
+      properties:
+        status:
+          type: string
+          description: Response status
+          example: ok
+        message:
+          type: string
+          description: Human-readable status message
+          example: Command executed successfully
   parameters:
     apikey:
       name: apikey

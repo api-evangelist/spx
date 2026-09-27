@@ -43,6 +43,14 @@ paths:
               schema:
                 $ref: '#/components/schemas/FileListResponse'
 components:
+  parameters:
+    apikey:
+      name: apikey
+      in: query
+      description: API key for authentication. Required only if the SPX configuration has an apikey value set. Leave empty if no restriction is configured.
+      required: false
+      schema:
+        type: string
   schemas:
     FileListResponse:
       type: object
@@ -60,14 +68,6 @@ components:
           - logo.png
           - background.jpg
           - overlay.mp4
-  parameters:
-    apikey:
-      name: apikey
-      in: query
-      description: API key for authentication. Required only if the SPX configuration has an apikey value set. Leave empty if no restriction is configured.
-      required: false
-      schema:
-        type: string
 externalDocs:
   description: SPX Graphics API Documentation
   url: https://spxgc.tawk.help/article/help-api
