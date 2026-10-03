@@ -112,6 +112,14 @@ paths:
               schema:
                 $ref: '#/components/schemas/SuccessResponse'
 components:
+  parameters:
+    apikey:
+      name: apikey
+      in: query
+      description: API key for authentication. Required only if the SPX configuration has an apikey value set. Leave empty if no restriction is configured.
+      required: false
+      schema:
+        type: string
   schemas:
     ItemUpdateRequest:
       type: object
@@ -138,18 +146,6 @@ components:
       - project
       - rundown
       - item
-    SuccessResponse:
-      type: object
-      description: Standard SPX API success response
-      properties:
-        status:
-          type: string
-          description: Response status
-          example: ok
-        message:
-          type: string
-          description: Human-readable status message
-          example: Command executed successfully
     TemplateField:
       type: object
       description: A template variable name/value pair
@@ -162,6 +158,18 @@ components:
           type: string
           description: Value to assign to the field
           example: John Smith
+    SuccessResponse:
+      type: object
+      description: Standard SPX API success response
+      properties:
+        status:
+          type: string
+          description: Response status
+          example: ok
+        message:
+          type: string
+          description: Human-readable status message
+          example: Command executed successfully
     DirectPlayoutRequest:
       type: object
       description: Request body for direct playout without a rundown context
@@ -185,14 +193,6 @@ components:
       required:
       - command
       - template
-  parameters:
-    apikey:
-      name: apikey
-      in: query
-      description: API key for authentication. Required only if the SPX configuration has an apikey value set. Leave empty if no restriction is configured.
-      required: false
-      schema:
-        type: string
 externalDocs:
   description: SPX Graphics API Documentation
   url: https://spxgc.tawk.help/article/help-api
