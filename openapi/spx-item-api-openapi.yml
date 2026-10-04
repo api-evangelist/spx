@@ -112,14 +112,6 @@ paths:
               schema:
                 $ref: '#/components/schemas/SuccessResponse'
 components:
-  parameters:
-    apikey:
-      name: apikey
-      in: query
-      description: API key for authentication. Required only if the SPX configuration has an apikey value set. Leave empty if no restriction is configured.
-      required: false
-      schema:
-        type: string
   schemas:
     ItemUpdateRequest:
       type: object
@@ -146,18 +138,6 @@ components:
       - project
       - rundown
       - item
-    TemplateField:
-      type: object
-      description: A template variable name/value pair
-      properties:
-        field:
-          type: string
-          description: Field name matching the template variable
-          example: f0
-        value:
-          type: string
-          description: Value to assign to the field
-          example: John Smith
     SuccessResponse:
       type: object
       description: Standard SPX API success response
@@ -193,6 +173,26 @@ components:
       required:
       - command
       - template
+    TemplateField:
+      type: object
+      description: A template variable name/value pair
+      properties:
+        field:
+          type: string
+          description: Field name matching the template variable
+          example: f0
+        value:
+          type: string
+          description: Value to assign to the field
+          example: John Smith
+  parameters:
+    apikey:
+      name: apikey
+      in: query
+      description: API key for authentication. Required only if the SPX configuration has an apikey value set. Leave empty if no restriction is configured.
+      required: false
+      schema:
+        type: string
 externalDocs:
   description: SPX Graphics API Documentation
   url: https://spxgc.tawk.help/article/help-api
