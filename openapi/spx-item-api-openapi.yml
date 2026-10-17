@@ -113,6 +113,18 @@ paths:
                 $ref: '#/components/schemas/SuccessResponse'
 components:
   schemas:
+    SuccessResponse:
+      type: object
+      description: Standard SPX API success response
+      properties:
+        status:
+          type: string
+          description: Response status
+          example: ok
+        message:
+          type: string
+          description: Human-readable status message
+          example: Command executed successfully
     ItemUpdateRequest:
       type: object
       description: Request body for updating a rundown item's data fields
@@ -138,18 +150,18 @@ components:
       - project
       - rundown
       - item
-    SuccessResponse:
+    TemplateField:
       type: object
-      description: Standard SPX API success response
+      description: A template variable name/value pair
       properties:
-        status:
+        field:
           type: string
-          description: Response status
-          example: ok
-        message:
+          description: Field name matching the template variable
+          example: f0
+        value:
           type: string
-          description: Human-readable status message
-          example: Command executed successfully
+          description: Value to assign to the field
+          example: John Smith
     DirectPlayoutRequest:
       type: object
       description: Request body for direct playout without a rundown context
@@ -173,18 +185,6 @@ components:
       required:
       - command
       - template
-    TemplateField:
-      type: object
-      description: A template variable name/value pair
-      properties:
-        field:
-          type: string
-          description: Field name matching the template variable
-          example: f0
-        value:
-          type: string
-          description: Value to assign to the field
-          example: John Smith
   parameters:
     apikey:
       name: apikey

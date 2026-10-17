@@ -74,18 +74,6 @@ components:
       schema:
         type: string
   schemas:
-    SuccessResponse:
-      type: object
-      description: Standard SPX API success response
-      properties:
-        status:
-          type: string
-          description: Response status
-          example: ok
-        message:
-          type: string
-          description: Human-readable status message
-          example: Command executed successfully
     CustomJSONRequest:
       type: object
       description: Arbitrary JSON data payload to persist to disk
@@ -101,6 +89,18 @@ components:
       required:
       - filename
       - data
+    SuccessResponse:
+      type: object
+      description: Standard SPX API success response
+      properties:
+        status:
+          type: string
+          description: Response status
+          example: ok
+        message:
+          type: string
+          description: Human-readable status message
+          example: Command executed successfully
 externalDocs:
   description: SPX Graphics API Documentation
   url: https://spxgc.tawk.help/article/help-api
